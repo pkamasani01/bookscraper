@@ -6,7 +6,7 @@
 import scrapy
 from scrapy import Field
 
-
+# add comments
 class BookscraperItem(scrapy.Item):
     title = Field()
     price = Field()

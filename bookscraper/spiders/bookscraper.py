@@ -1,3 +1,4 @@
+# Import libraries
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from bookscraper.items import BookscraperItem
@@ -5,14 +6,18 @@ import os
 from csv import writer
 
 class BookScraper(CrawlSpider):
+    # name of the project
     name = "bookscraper"
+    # URL to scrape 
     start_urls = ["http://books.toscrape.com/"]
     
+    # Rules for scraping
     rules = (
         Rule(LinkExtractor(restrict_css=".nav-list > li > ul > li > a"),follow = True),
         Rule(LinkExtractor(restrict_css=".product_pod > h3 > a"),callback = "parse_book")
         )
-
+    # Function to parse the website
+    # This function is called untill all books are parsed
     def parse_book(self, response):
         book_item = BookscraperItem()
         book_item["image_url"] = response.urljoin(response.css(".item.active > img::attr(src)").get())
@@ -33,7 +38,7 @@ class BookScraper(CrawlSpider):
             )
         
         return book_item
-    
+    # Save data to data.csv file
     def Save_to_file(self, image_url, title, price, upc, url, availability, reviews):
         self.price = price
         self.image_url = image_url
